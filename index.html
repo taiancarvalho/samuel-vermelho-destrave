@@ -71,7 +71,7 @@
       background-color: var(--bg);
       color: var(--text);
       font-family: var(--ff-body);
-      font-size: clamp(16px, 2.2vw, 19px);
+      font-size: 16px;
       line-height: 1.75;
       overflow-x: hidden;
     }
@@ -100,17 +100,17 @@
       line-height: 1.15;
     }
 
-    /* Level 1 — hero title only */
-    h1 { font-size: clamp(2.8rem, 9vw, 5rem); font-weight: 700; }
+    /* Level 1 — hero title */
+    h1 { font-size: 36px; font-weight: 700; }
 
     /* Level 2 — section headings */
-    h2 { font-size: clamp(1.9rem, 4.5vw, 2.6rem); font-weight: 600; }
+    h2 { font-size: 24px; font-weight: 600; }
 
     /* Level 3 — card headings */
-    h3 { font-size: clamp(1.2rem, 2.8vw, 1.4rem); font-weight: 600; }
+    h3 { font-size: 18px; font-weight: 600; }
 
     /* Body text */
-    p { font-size: clamp(1rem, 2.3vw, 1.05rem); line-height: 1.8; }
+    p { font-size: 16px; line-height: 1.8; }
 
     .gold  { color: var(--gold); }
     .italic { font-style: italic; }
@@ -154,7 +154,7 @@
     .section-header h2 { margin-bottom: 12px; }
     .section-header p {
       color: var(--text);
-      font-size: clamp(1rem, 2.5vw, 1.1rem);
+      font-size: 16px;
       max-width: 520px;
       margin: 0 auto;
     }
@@ -168,7 +168,7 @@
       gap: 10px;
       font-family: var(--ff-ui);
       font-weight: 600;
-      font-size: clamp(0.82rem, 2vw, 0.9rem);
+      font-size: 13px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       padding: 18px 36px;
@@ -270,38 +270,105 @@
     /* ═══════════════════════════════════════════
        HERO
     ═══════════════════════════════════════════ */
+    /* ── HERO MOBILE: foto no topo + fade para o fundo escuro ── */
     #hero {
-      min-height: 100svh;
+      background: var(--bg);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      align-items: stretch;
       text-align: center;
-      padding-top: 110px;
-      padding-bottom: 60px;
       position: relative;
       overflow: hidden;
-      background:
-        linear-gradient(
-          to bottom,
-          rgba(12,9,6,0.80) 0%,
-          rgba(12,9,6,0.60) 35%,
-          rgba(12,9,6,0.65) 65%,
-          rgba(12,9,6,0.88) 100%
-        ),
-        url('hero.png') center 18% / cover no-repeat;
     }
-    /* subtle gold vignette at bottom */
-    #hero::before {
+
+    /* Foto — visível só no mobile */
+    .hero-photo {
+      position: relative;
+      width: 100%;
+      height: 260px;
+      overflow: hidden;
+      flex-shrink: 0;
+      margin-top: 72px; /* espaço do header fixo */
+    }
+    .hero-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 22%;
+      display: block;
+    }
+    /* fade suave de baixo para o fundo */
+    .hero-photo::after {
       content: '';
       position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 30%;
-      background: linear-gradient(to top, rgba(12,9,6,0.5), transparent);
-      pointer-events: none;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(12,9,6,0) 30%,
+        rgba(12,9,6,0.6) 65%,
+        rgba(12,9,6,1) 100%
+      );
     }
-    /* ensure content sits above overlays */
-    #hero .container { position: relative; z-index: 1; }
+
+    /* Conteúdo hero */
+    #hero .container {
+      position: relative;
+      z-index: 1;
+      padding-top: 32px;
+      padding-bottom: 60px;
+    }
+
+    /* ── HERO DESKTOP: grid 2 colunas ── */
+    @media (min-width: 768px) {
+      #hero {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+        min-height: 80vh;
+        align-items: stretch;
+        background: var(--bg);
+        padding-top: 0;
+      }
+      /* foto aparece no desktop também — coluna direita */
+      .hero-photo {
+        display: block;
+        height: 100%;
+        min-height: 80vh;
+        margin-top: 0;
+        grid-column: 2;
+        grid-row: 1;
+        order: 2;
+      }
+      .hero-photo img {
+        object-position: 60% center;
+      }
+      /* no desktop o fade vai da esquerda (escuro) para direita (transparente) */
+      .hero-photo::after {
+        background: linear-gradient(
+          to right,
+          rgba(12,9,6,1) 0%,
+          rgba(12,9,6,0.6) 35%,
+          transparent 70%
+        );
+      }
+      /* partículas somem no desktop com grid */
+      .particles { display: none; }
+      /* conteúdo — coluna esquerda */
+      #hero .container {
+        grid-column: 1;
+        grid-row: 1;
+        order: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: left;
+        padding-top: 110px;
+        padding-bottom: 60px;
+      }
+      .hero-label { justify-content: flex-start; }
+      .hero-sub   { margin-left: 0; margin-right: 0; }
+      .event-strip { justify-content: flex-start; }
+    }
 
     /* Workshop label above title */
     .hero-label {
@@ -327,7 +394,7 @@
 
     /* Title — unified, single font-size */
     .hero-title {
-      font-size: clamp(2.8rem, 9vw, 5rem);
+      font-size: 36px;
       font-weight: 700;
       color: var(--cream);
       line-height: 1.08;
@@ -342,7 +409,7 @@
     /* Subtitle — clearly second-level, prominent */
     .hero-sub {
       font-family: var(--ff-body);
-      font-size: clamp(1.25rem, 3.5vw, 1.6rem);
+      font-size: 20px;
       font-style: italic;
       color: var(--gold-light);
       line-height: 1.55;
@@ -427,7 +494,7 @@
     }
     .pain-card p {
       font-style: italic;
-      font-size: clamp(1rem, 2.5vw, 1.05rem);
+      font-size: 16px;
       color: var(--text);
     }
 
@@ -533,7 +600,7 @@
     }
     .event-detail-value {
       font-family: var(--ff-display);
-      font-size: clamp(1.1rem, 2.8vw, 1.25rem);
+      font-size: 18px;
       color: var(--cream);
       font-weight: 600;
     }
@@ -608,7 +675,7 @@
       margin-bottom: 24px;
     }
     .samuel-bio {
-      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      font-size: 16px;
       color: var(--text);
       max-width: 580px;
       margin: 0 auto 36px;
@@ -636,7 +703,7 @@
     .stat-item:last-child { border-right: none; }
     .stat-value {
       font-family: var(--ff-display);
-      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      font-size: 28px;
       color: var(--gold);
       font-weight: 700;
       display: block;
@@ -681,7 +748,7 @@
     .stars svg { width: 15px; height: 15px; color: var(--gold); fill: var(--gold); }
     .testimonial-text {
       font-style: italic;
-      font-size: clamp(1rem, 2.5vw, 1.05rem);
+      font-size: 16px;
       color: var(--text);
       margin-bottom: 20px;
       line-height: 1.8;
@@ -738,7 +805,7 @@
       padding: 22px 0;
       text-align: left;
       font-family: var(--ff-display);
-      font-size: clamp(1.05rem, 2.5vw, 1.15rem);
+      font-size: 16px;
       color: var(--cream);
       font-weight: 600;
       transition: color 0.3s;
@@ -768,7 +835,7 @@
       transition: max-height 0.4s ease, padding 0.4s ease;
     }
     .faq-answer.open { max-height: 300px; padding-bottom: 20px; }
-    .faq-answer p { color: var(--text); font-size: clamp(1rem, 2.5vw, 1.05rem); line-height: 1.8; }
+    .faq-answer p { color: var(--text); font-size: 16px; line-height: 1.8; }
 
     /* ═══════════════════════════════════════════
        FINAL CTA
@@ -806,7 +873,7 @@
     }
     .cta-sub {
       color: var(--text);
-      font-size: clamp(1rem, 2.5vw, 1.05rem);
+      font-size: 16px;
       max-width: 440px;
       margin: 0 auto 40px;
     }
@@ -896,6 +963,11 @@
 
   <!-- HERO -->
   <section id="hero">
+    <!-- Foto mobile com fade -->
+    <div class="hero-photo" aria-hidden="true">
+      <img src="hero.png" alt="" />
+    </div>
+
     <div class="particles" aria-hidden="true">
       <div class="particle" style="left:8%;  --dur:9s;  --delay:0s;   top:80%;"></div>
       <div class="particle" style="left:20%; --dur:11s; --delay:1.5s; top:88%;"></div>
@@ -914,8 +986,8 @@
       </h1>
 
       <p class="hero-sub">
-        Libere o que prende.<br>
-        Conecte o que realmente importa.
+        Por que vocês até tentam conversar,<br>
+        mas continuam se desentendendo?
       </p>
 
       <div class="event-strip" aria-label="Detalhes do evento">
@@ -950,30 +1022,30 @@
       <div class="container">
         <div class="section-header reveal">
           <div class="divider"><span>Você se identifica?</span></div>
-          <h2>Algo aqui <em class="italic gold">ressoa com você?</em></h2>
-          <p>Muitas mulheres chegam ao workshop sentindo exatamente isso. Você não está sozinha.</p>
+          <h2>Algo aqui <em class="italic gold">ressoa com vocês?</em></h2>
+          <p>Não precisa vir em casal — apenas um já é suficiente para começar a mudança.</p>
         </div>
 
         <div class="pain-grid">
           <div class="pain-card reveal reveal-delay-1">
             <span class="pain-icon" aria-hidden="true">❝</span>
-            <p>"Vocês estão no mesmo teto, mas vivendo em mundos diferentes?"</p>
+            <p>"Vocês estão no mesmo teto, mas vivendo em mundos completamente diferentes?"</p>
           </div>
           <div class="pain-card reveal reveal-delay-2">
             <span class="pain-icon" aria-hidden="true">❝</span>
-            <p>"A conversa virou rotina — ou pior, silêncio constante?"</p>
+            <p>"A conversa virou rotina — ou pior, qualquer assunto vira briga?"</p>
           </div>
           <div class="pain-card reveal reveal-delay-3">
             <span class="pain-icon" aria-hidden="true">❝</span>
-            <p>"Você tenta se aproximar, mas algo sempre trava antes mesmo de começar?"</p>
+            <p>"Uma parte do casal quer se aproximar, mas o outro parece estar sempre na defensiva?"</p>
           </div>
           <div class="pain-card reveal reveal-delay-4">
             <span class="pain-icon" aria-hidden="true">❝</span>
-            <p>"Sente falta da intimidade e da conexão que vocês tinham no começo?"</p>
+            <p>"Sentem falta da intimidade e da leveza que tinham no começo?"</p>
           </div>
           <div class="pain-card reveal reveal-delay-1" style="grid-column: 1 / -1;">
             <span class="pain-icon" aria-hidden="true">❝</span>
-            <p>"Quer muito mudar isso, mas não sabe por onde começar sem gerar mais conflito?"</p>
+            <p>"Querem mudar, mas cada tentativa acaba em mais frustração e distância?"</p>
           </div>
         </div>
       </div>
@@ -1079,16 +1151,12 @@
             </p>
             <div class="samuel-stats">
               <div class="stat-item">
-                <span class="stat-value">+500</span>
-                <span class="stat-label">Casais Atendidos</span>
+                <span class="stat-value">+4000</span>
+                <span class="stat-label">Casais Impactados</span>
               </div>
               <div class="stat-item">
-                <span class="stat-value">+10</span>
+                <span class="stat-value">+15</span>
                 <span class="stat-label">Anos de Experiência</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value">98%</span>
-                <span class="stat-label">Satisfação</span>
               </div>
             </div>
           </div><!-- /.samuel-content -->
@@ -1114,7 +1182,7 @@
               <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
-            <p class="testimonial-text">"Achei que nosso casamento estava perdido. Depois do acompanhamento com o Samuel, voltamos a conversar de verdade. É como se tivéssemos nos reencontrado."</p>
+            <p class="testimonial-text">"A gente brigava por qualquer coisa — e no fundo eu sabia que não era sobre aquilo. No acompanhamento com o Samuel, entendi o que estava por trás dos nossos conflitos. Foi difícil, mas foi o que salvou nosso casamento."</p>
             <div class="testimonial-author">
               <div class="author-initial" aria-hidden="true">A</div>
               <div>
@@ -1132,7 +1200,7 @@
               <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
-            <p class="testimonial-text">"O workshop me deu ferramentas que eu nunca tive antes. Em duas semanas, a nossa comunicação mudou completamente. Recomendo para qualquer casal."</p>
+            <p class="testimonial-text">"Vim sozinha, sem avisar meu marido. Aprendi a escutar de um jeito que nunca tinha aprendido antes. Algo mudou em mim — e ele percebeu, sem eu precisar explicar nada."</p>
             <div class="testimonial-author">
               <div class="author-initial" aria-hidden="true">P</div>
               <div>
@@ -1150,7 +1218,7 @@
               <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
-            <p class="testimonial-text">"Entrei no workshop sem muita expectativa. Saí com uma nova perspectiva do meu casamento e do que eu precisava mudar em mim mesma. Foi transformador."</p>
+            <p class="testimonial-text">"Depois de anos achando que o problema era ele, o processo me mostrou o que eu também precisava ver. Não foi fácil, mas hoje a gente conversa sem guerra. Isso não tem preço."</p>
             <div class="testimonial-author">
               <div class="author-initial" aria-hidden="true">R</div>
               <div>
@@ -1189,7 +1257,7 @@
               <div class="faq-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg></div>
             </button>
             <div class="faq-answer" role="region">
-              <p>Não é obrigatório. O workshop foi desenhado para que você, individualmente, adquira ferramentas que vão impactar positivamente a dinâmica do casal, mesmo que apenas um dos dois participe.</p>
+              <p>Não. O workshop foi desenhado para que apenas uma pessoa do casal participe — e ainda assim gere impacto real na dinâmica dos dois. Quando um muda a forma de se comunicar, o relacionamento muda junto.</p>
             </div>
           </div>
 
